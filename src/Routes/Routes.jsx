@@ -4,7 +4,6 @@ import Main from "../Components/Layout/Main";
 import MyProfile from "../Components/MyProfile/MyProfile";
 import Login from "../Components/Shared/LogIn/Login";
 import SignUp from "../Components/Shared/SignUp/SignUp";
-import UserInformation from "../Components/UserInformation/UserInformation";
 
 const route = createBrowserRouter([
     {
@@ -15,10 +14,7 @@ const route = createBrowserRouter([
                 path: '/',
                 element: <Home> </Home>
             },
-            {
-                path: '/user-info',
-                element: <UserInformation>  </UserInformation>
-            },
+           
             {   path: '/login',
                 element: <Login> </Login> 
             },

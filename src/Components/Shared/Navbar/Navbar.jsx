@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { AuthContext } from '../../AuthProvider/AuthProvider';
 import './Navbar.css' ;
+import { getAuth } from 'firebase/auth';
+import app from '../../../Firebase/Firebase.config';
 
 const Navbar = () => {
+  const {user,LogOut} = useContext(AuthContext)
+  const auth = getAuth(app)
+  const LogOutUser = () => {
+    LogOut(auth)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data.user)
+    })
+  }
     const menu = <>  
     <li> <NavLink to='/'>  Home                 </NavLink> </li>
     <li> <NavLink to='/my-profile'>  My Profile </NavLink> </li>
-    <li> <NavLink to='/login'>  Log in          </NavLink> </li> 
+    {
+      user?
+      <li> <button onClick={LogOutUser}>  Log out  </button> </li>
+      :
+      <li> <NavLink to='/login'>  Log in  </NavLink> </li>
+    } 
     </>
 
     return (
-        <div className="navbar bg-gray-300 w-full px-0 ">
+        <div className="navbar bg-gray-400 w-full px-0 text-slate-800">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">

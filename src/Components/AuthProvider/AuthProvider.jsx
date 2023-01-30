@@ -1,30 +1,42 @@
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
-import { createContext,useState } from "react";
-import app from './../../firebase.config'; 
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { createContext,useEffect,useState } from "react";
+import app from "../../Firebase/Firebase.config";
 
 export  const AuthContext = createContext()
 const auth = getAuth(app) ;
 
 
 const AuthProvider = ({children}) => {
- 
+    const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null) ;
-    const [loading, setLoading] = useState(false)
 
     // create user account by email 
     const CreateUserByEmail = (email,password) => {
+        setLoading(true)
         return createUserWithEmailAndPassword (auth , email , password)
     }
 
     const SignUpWithGoogle = (provider) => {
+        setLoading(true)
         return signInWithPopup(auth, provider)
     }
 
     const LogInWithEmail = (email, password) => {
+        setLoading(true)
         signInWithEmailAndPassword(auth,email,password)
     }
 
+    const  ResetPassword = (email) => {
+        setLoading(true)
+      sendPasswordResetEmail(auth,email)   
+    }
+
+    const sendEmailForVerify = () => {
+        setLoading(true)
+        sendEmailVerification(user)
+    }
     const LogOut = (auth) => {
+        setLoading(true)
         signOut(auth)
     }
 
@@ -32,8 +44,23 @@ const AuthProvider = ({children}) => {
         CreateUserByEmail,
         SignUpWithGoogle,
         LogInWithEmail,
-        LogOut
+        ResetPassword,
+        sendEmailForVerify,
+        LogOut,
+        user,
+        loading
     }
+
+
+    useEffect(()=> {
+        const unsubscribe = onAuthStateChanged(auth, currentUser => {
+            setLoading(false)
+            setUser(currentUser)
+        } )
+        return ()=> unsubscribe()
+     }, [])
+     
+
 
     return (
         <AuthContext.Provider value={authInfo}>
