@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext,  useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../AuthProvider/AuthProvider';
 import  './MyProfile.css'
@@ -11,7 +11,7 @@ const MyProfile = () => {
     const {user} = useContext(AuthContext);
     const closeButton = useRef();
     // get user info from database by signed in user
-    const url = `http://localhost:5000/userinfo/${user?.email}`
+    const url = `https://save-data-server-rosy.vercel.app/userinfo/${user?.email}`
     const {data:userInfo,refetch,isLoading} = useQuery({
       queryKey:[user?.email],
       queryFn: async ()=> {
@@ -20,6 +20,9 @@ const MyProfile = () => {
         return  data ;
       }
     })
+
+ 
+
     if(isLoading){
       return <div> Loading .... </div>
     }
@@ -34,7 +37,7 @@ const MyProfile = () => {
     const updateinfo = { name,sectors,email,agree }
         
   // update user information 
-  fetch(`http://localhost:5000/userinfo/updateinfo/${user?.email}`,{
+  fetch(`https://save-data-server-rosy.vercel.app/userinfo/updateinfo/${user?.email}`,{
     method: "PUT",
     headers:{
         'Content-type': 'application/json',
@@ -49,7 +52,7 @@ const MyProfile = () => {
         toast.success('Your information hasbeen updated')
         refetch()
         closeButton.current.click();
-
+        
     }
   })
   }
@@ -66,7 +69,7 @@ const MyProfile = () => {
          <h2 className=' text-slate-100 mt-2'> Sector: <span className='font-bold'>   {userInfo?.slot} </span> </h2>
          <h2 className=' text-slate-100 mt-2'> <span className='mr-2'>  Agree: </span>
         {
-            userInfo.agree ?
+            userInfo?.agree ?
 
              "true"
              :
@@ -88,10 +91,10 @@ const MyProfile = () => {
         </div>
      <div>
           {/* Put this part before </body> tag */}
-        <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+        <input type="checkbox" id="my-modal-3" ref={closeButton} className="modal-toggle" />
           <div className="modal">
             <div className="modal-box relative ">
-            <label htmlFor="my-modal-3" ref={closeButton} className="btn btn-sm btn-circle absolute 
+            <label htmlFor="my-modal-3"  className="btn btn-sm btn-circle absolute 
                  right-2 top-2">✕</label>
             <h3 className="text-lg font-bold"> Hey <span className='text-blue-600'> {userInfo?.name} </span> Update your information  </h3>
                <div>
@@ -102,7 +105,7 @@ const MyProfile = () => {
             <label className='ml-1 '> Sectors  : </label>
             <input type="text" name='sectors' defaultValue={userInfo?.slot} placeholder=" Write your sectors name " required className="input  input-bordered input-accent text-slate-800 w-full h-10 mt-1" />
 
-            <input  ref={closeButton} type={'submit'} value='Save ' className='bg-blue-500 hover:bg-blue-700 text-slate-100 px-4 rounded-md py-1 cursor-pointer mt-5' />
+            <input  type={'submit'} value='Save ' className='bg-blue-500 hover:bg-blue-700 text-slate-100 px-4 rounded-md py-1 cursor-pointer mt-5' />
              </form>
                </div>
             </div>

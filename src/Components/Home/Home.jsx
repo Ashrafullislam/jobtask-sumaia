@@ -25,7 +25,7 @@ const Home = () => {
      const email = user?.email ;
      const userInfo = {name,slot,email,agree:isChecked}
      console.log(userInfo)
-     fetch('http://localhost:5000/userdata',  {
+     fetch('https://save-data-server-rosy.vercel.app/userdata',  {
       method: 'POST',
       headers: {
          'content-type': 'application/json'
@@ -56,7 +56,7 @@ const Home = () => {
  }
 
     useEffect(() => {
-       fetch('http://localhost:5000/slots')
+       fetch('https://save-data-server-rosy.vercel.app/slots')
        .then(res => res.json())
        .then( data => {
         setSelectors(data[0].selectors)
